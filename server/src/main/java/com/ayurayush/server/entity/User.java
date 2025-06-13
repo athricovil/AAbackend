@@ -3,7 +3,6 @@ package com.ayurayush.server.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Entity
 @Table(name = "users")
 @Getter
@@ -12,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,4 +24,14 @@ public class User {
 
     @Column(nullable = false)
     private String role;
+
+    @Column(unique = true, length = 15)
+    private String phone;
+
+    @Column(length = 15)
+    private String whatsapp;
+
+    @Column(name = "phone_verified")
+    private boolean phoneVerified;
 }
+
