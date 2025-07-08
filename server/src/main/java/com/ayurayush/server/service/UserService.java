@@ -3,18 +3,20 @@ package com.ayurayush.server.service;
 import com.ayurayush.server.dto.SignupRequest;
 import com.ayurayush.server.entity.User;
 import com.ayurayush.server.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);

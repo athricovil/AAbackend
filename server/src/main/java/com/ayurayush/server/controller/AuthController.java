@@ -9,7 +9,6 @@ import com.ayurayush.server.security.JwtUtils;
 import com.ayurayush.server.service.OtpService;
 import com.ayurayush.server.service.UserService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,15 +19,27 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-@RequiredArgsConstructor
 public class AuthController {
-
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
     private final JwtUtils jwtUtils;
     private final OtpService otpService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    public AuthController(AuthenticationManager authenticationManager,
+                         UserService userService,
+                         JwtUtils jwtUtils,
+                         OtpService otpService,
+                         UserRepository userRepository,
+                         PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.userService = userService;
+        this.jwtUtils = jwtUtils;
+        this.otpService = otpService;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -58,8 +69,9 @@ public class AuthController {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String jwt = jwtUtils.generateJwtToken(userDetails);
-
-        return ResponseEntity.ok(new JwtResponse(jwt, "Bearer", userDetails.getUsername()));
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElse(null);
+        Long userId = user != null ? user.getId() : null;
+        return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getUsername(), "Bearer", userId));
     }
 
     @PostMapping("/otp-request")
@@ -88,7 +100,7 @@ public class AuthController {
                 .build();
 
         String jwt = jwtUtils.generateJwtToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(jwt, "Bearer", userDetails.getUsername()));
+        return ResponseEntity.ok(new JwtResponse(jwt, user.getUsername(), "Bearer", user.getId()));
     }
 }
 
