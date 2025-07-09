@@ -36,6 +36,7 @@ public class SecurityConfig {
             .cors(cors -> {})  // enables CORS
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/products").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Allow all OPTIONS requests for CORS
                 .anyRequest().authenticated()
