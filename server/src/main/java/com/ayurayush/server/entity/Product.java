@@ -21,6 +21,7 @@ public class Product {
     private String imageUrl;
     private LocalDateTime createdAt = LocalDateTime.now();
     private BigDecimal rating = BigDecimal.ZERO;
+    private boolean available = true;
 
     public Product() {}
 
@@ -48,4 +49,6 @@ public class Product {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public BigDecimal getRating() { return rating; }
     public void setRating(BigDecimal rating) { this.rating = rating; }
+    public boolean isAvailable() { return available; }
+    public void setAvailable(boolean available) { this.available = available; }
 }
